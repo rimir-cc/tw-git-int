@@ -1,9 +1,11 @@
 created: 20260305110616405
 modified: 20260305110616405
+tags: $:/tags/Image
 title: $:/plugins/rimir/git-int/icon
-type: image/svg+xml
+type: text/vnd.tiddlywiki
 
-<svg width="22pt" height="22pt" viewBox="0 0 24 24" fill="none" stroke="maroon" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+\parameters (size:"22pt")
+<svg width=<<size>> height=<<size>> viewBox="0 0 24 24" fill="none" stroke="maroon" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <circle cx="12" cy="6" r="2"/>
   <circle cx="12" cy="18" r="2"/>
   <circle cx="18" cy="12" r="2"/>
