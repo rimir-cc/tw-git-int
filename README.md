@@ -22,6 +22,10 @@ Git version control for individual tiddlers from within the TiddlyWiki editor. C
 
 Initialize git in your tiddlers directory. Open any tiddler in edit mode and click the git icon in the toolbar to access diff, commit, and stash operations.
 
+## Plugin Library
+
+Install from the [rimir plugin library](https://rimir-cc.github.io/tw-plugin-library/) via *Control Panel → Plugins → Get more plugins*.
+
 ## License
 
 MIT -- see [LICENSE.md](LICENSE.md)
