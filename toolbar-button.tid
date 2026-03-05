@@ -1,0 +1,37 @@
+caption: {{$:/plugins/rimir/git-int/icon}} Git
+created: 20260305110616407
+description: Toggle git version control panel
+modified: 20260305110616407
+tags: $:/tags/EditToolbar
+title: $:/plugins/rimir/git-int/toolbar-button
+type: text/vnd.tiddlywiki
+
+\whitespace trim
+\procedure git-toolbar-button()
+<$let
+	originalTitle={{{ [{!!draft.of}] }}}
+	draftTitle=<<currentTiddler>>
+	panelState={{{ [[$:/state/rimir/git-int/]addsuffix<originalTitle>] }}}
+>
+<$button
+	class=<<tv-config-toolbar-class>>
+	tooltip="Toggle git panel"
+	aria-label="Toggle git panel"
+>
+	<$action-setfield
+		$tiddler=<<panelState>>
+		text={{{ [<panelState>get[text]match[open]then[closed]else[open]] }}}
+	/>
+	<$list filter="[<panelState>get[text]else[closed]!match[open]]" variable="x">
+		<$action-git op="diff" title=<<originalTitle>> draft=<<draftTitle>>/>
+	</$list>
+	<%if [<tv-config-toolbar-icons>match[yes]] %>
+		{{$:/plugins/rimir/git-int/icon}}
+	<%endif%>
+	<%if [<tv-config-toolbar-text>match[yes]] %>
+		<span class="tc-btn-text">Git</span>
+	<%endif%>
+</$button>
+</$let>
+\end
+<<git-toolbar-button>>

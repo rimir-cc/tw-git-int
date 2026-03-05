@@ -1,0 +1,63 @@
+created: 20260305110616403
+modified: 20260305110616403
+rdt.order: 2
+rdt.plugin-key: git-int
+rdt.plugin-name: git integration
+rdt.plugin-subtitle: Git version control for individual tiddlers from the editor
+rdt.section: Architecture
+title: $:/plugins/rimir/git-int/doc/architecture
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! Three-layer architecture
+
+* ''Browser UI'' — `panel.tid` (3 tabs), `toolbar-button.tid`, `styles.tid`
+* ''Action widget'' — `<$action-git>` XHR bridge between UI and server
+* ''Server routes'' — `route.js` (GET), `route-post.js` (POST), `git-utils.js` (shared)
+
+!! Components
+
+|!Component |!Layer |!Role |
+|`route.js` |Server |GET ops: log, show, stash-list, stash-show, stash-drop |
+|`route-post.js` |Server |POST ops: diff, snapshot, stash-push |
+|`git-utils.js` |Server |Shared: `resolveTiddlerPath`, `parseTidFields`, `parseTidBody`, `execGit`, `sendJson` |
+|`action-git.js` |Browser |`<$action-git>` widget — XHR bridge, writes to `$:/temp/` |
+|`panel.tid` |Browser |EditTemplate UI — 3 tabs (Diff/Commit/Stash) |
+|`toolbar-button.tid` |Browser |Editor toolbar button |
+
+!! Why POST for diff/snapshot/stash-push
+
+The server's `$tw.wiki` may not have the latest browser edits due to syncer polling delay. POST allows the browser to send current draft field values.
+
+!! Diff model
+
+All fields compared uniformly. Server returns `fieldChanges` array with per-field diffs.
+
+!! State tiddlers
+
+* `$:/state/rimir/git-int/<title>` — panel open/closed
+* `$:/state/rimir/git-int/tab/<title>` — active tab
+* `$:/temp/rimir/git-int/<title>/<op>` — operation response data
+
+!! Security
+
+* No arbitrary paths — validates against `$tw.boot.files`
+* Input validation — hash `/^[a-f0-9]{4,40}$/`, index `/^\d+$/`
+* `execFile` with array args — no shell injection
+* CSRF header required (`X-Requested-With: TiddlyWiki`)
+
+!! Key data flows
+
+* ''Diff'': draft fields → POST → `git show` → compare all fields → `fieldChanges`
+* ''Per-field revert'': click undo → delete/set field on draft → re-run diff
+* ''Commit'': message → POST snapshot → write `.tid` → `git add` + `git commit` → auto-refresh log
+* ''Restore'': click restore → GET show → replace all draft fields (remove absent ones)
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/callout" type="info">
+<$fill $name="body">Field order is preserved when writing `.tid` files to avoid creating false diffs in git.</$fill>
+</$transclude>
+
+</$fill>
+</$transclude>

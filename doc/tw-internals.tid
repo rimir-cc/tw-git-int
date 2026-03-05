@@ -1,0 +1,49 @@
+created: 20260305110616405
+modified: 20260305110616405
+rdt.order: 7
+rdt.plugin-key: git-int
+rdt.plugin-name: git integration
+rdt.plugin-subtitle: Git version control for individual tiddlers from the editor
+rdt.section: TW Internals
+title: $:/plugins/rimir/git-int/doc/tw-internals
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! $tw.boot.files path resolution
+
+`$tw.boot.files[title]` maps tiddler titles to filesystem paths. The `resolveTiddlerPath` utility in `git-utils.js` uses this to find the `.tid` file for any tiddler. Returns `null` if the tiddler has no filesystem backing (e.g., shadow tiddlers).
+
+!! execFile vs exec
+
+The plugin uses `child_process.execFile("git", args)` with an array of arguments instead of `child_process.exec("git " + args)`. This avoids shell injection — arguments are passed directly to the git process without shell interpretation.
+
+!! Route module-type
+
+Both `route.js` and `route-post.js` use `module-type: route`. They export `method` (`"GET"` or `"POST"`), `path` (regex), and `handler`. POST routes also export `bodyFormat: "string"` to tell TW to read the request body as a string (parsed as JSON in the handler).
+
+!! Action widget XHR pattern
+
+`action-git.js` uses `XMLHttpRequest` directly (not `tm-http-request`) because it needs response data handling. The widget:
+
+# Sets `$:/temp/rimir/git-int/<title>/<op>` to `{status: "loading"}`
+# Sends GET or POST request with CSRF header
+# On response: parses JSON, writes result to the temp tiddler
+# For restore ops: reads response fields and writes them onto the draft tiddler
+
+!! EditTemplate tags
+
+`panel.tid` is tagged `$:/tags/EditTemplate` with `list-after: $:/core/ui/EditTemplate/controls`. This places the git panel inside every tiddler's edit view, below the toolbar controls. The panel is hidden by default — only visible when the state tiddler is set to `"open"`.
+
+!! $:/temp/ tiddlers
+
+Tiddlers with `$:/temp/` prefix are:
+
+* Not saved to disk by the filesystem adaptor
+* Not included in the skinny tiddler list (excluded by default filter)
+* Not persisted across page reloads
+* Ideal for transient UI state like operation responses
+
+</$fill>
+</$transclude>

@@ -1,0 +1,96 @@
+created: 20260305110616405
+modified: 20260305110616405
+rdt.order: 6
+rdt.plugin-key: git-int
+rdt.plugin-name: git integration
+rdt.plugin-subtitle: Git version control for individual tiddlers from the editor
+rdt.section: Reference
+title: $:/plugins/rimir/git-int/doc/reference
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! GET /api/git
+
+|!Parameter |!Used by |!Format |!Description |
+|`op` |all |`log` `show` `stash-list` `stash-show` `stash-drop` |Operation name |
+|`title` |all except stash-list |tiddler title |Target tiddler |
+|`count` |log |integer (default 20) |Max log entries |
+|`hash` |show |`/^[a-f0-9]{4,40}$/` |Commit hash |
+|`index` |stash-show, stash-drop |`/^\d+$/` |Stash index |
+
+!! POST /api/git
+
+Request body (JSON):
+
+|!Field |!Used by |!Description |
+|`op` |all |`diff` `snapshot` `stash-push` |
+|`title` |all |Original tiddler title |
+|`fields` |all |Current draft fields object |
+|`message` |snapshot, stash-push |Commit/stash message |
+|`hash` |diff |Compare against specific commit |
+|`index` |diff |Compare against stash entry |
+
+CSRF header required: `X-Requested-With: TiddlyWiki`
+
+!! Response JSON
+
+All responses include `op` and `status` (`"ok"` or `"error"`).
+
+|!Op |!Extra fields |
+|log |`entries: [{hash, date, message}]` |
+|show, stash-show |`content` (body text), `fields` (parsed header) |
+|diff |`fieldChanges: [{field, type, oldVal, newVal}]`, `hasDiff`, `diffLabel`, `hash`, `index` |
+|snapshot |`output` (git commit output) |
+|stash-list |`entries: [{index, ref, date, message}]` |
+|stash-push |`output` (git stash output) |
+|stash-drop |`output` (git stash drop output) |
+
+!! <$action-git> widget
+
+|!Attribute |!Description |
+|`op` |Operation: log, show, diff, snapshot, stash-list, stash-show, stash-drop, stash-push |
+|`title` |Original (non-draft) tiddler title |
+|`hash` |Git commit hash (show, diff) |
+|`message` |Commit/stash message (snapshot, stash-push) |
+|`draft` |Draft tiddler title (diff, snapshot, stash-push, show, stash-show) |
+|`index` |Stash index number (stash-show, stash-drop, diff) |
+
+!! State tiddlers
+
+|!Pattern |!Purpose |
+|`$:/state/rimir/git-int/<title>` |Panel open/closed |
+|`$:/state/rimir/git-int/tab/<title>` |Active tab name |
+|`$:/temp/rimir/git-int/<title>/<op>` |Operation response (JSON) |
+|`$:/temp/rimir/git-int/_global/stash-list` |Global stash list response |
+|`$:/temp/rimir/git-int/commit-msg/<title>` |Commit message input |
+|`$:/temp/rimir/git-int/stash-msg/<title>` |Stash message input |
+
+!! CSS classes
+
+Shared classes from `$:/plugins/rimir/theme` (prefix `rr-`):
+
+|!Class |!Element |
+|`rr-panel` |Panel border, radius, background |
+|`rr-tabs` / `rr-tab` / `rr-tab-active` |Tab bar |
+|`rr-table` |Log/stash tables |
+|`rr-status-loading` / `rr-status-error` / `rr-status-success` / `rr-status-info` |Status messages |
+|`rr-badge-circle` / `rr-badge-added` / `rr-badge-removed` |Field change badges |
+|`rr-input-row` / `rr-input` |Commit/stash message form |
+|`rr-link-btn` / `rr-link-btn-danger` |Diff/Restore/Apply/Drop buttons |
+
+Plugin-specific classes (prefix `rgi-`):
+
+|!Class |!Element |
+|`rgi-panel-wrapper` |Outer panel container |
+|`rgi-panel` |Panel margin |
+|`rgi-tab-content` |Tab content area (padding, max-height, scroll) |
+|`rgi-field-diffs` / `rgi-field-diff-row` / `rgi-field-label` / `rgi-field-diff-content` / `rgi-field-reset` |Field-level diff display |
+|`rgi-diff-view` / `rgi-diff-label` |Text diff area |
+|`rgi-hash` / `rgi-date` |Monospace hash, muted date |
+|`rgi-stale-warning` / `rgi-recalc-btn` |Outdated diff indicator |
+|`rgi-snapshot-btn` / `rgi-stash-btn` / `rgi-stash-actions` |Button whitespace control |
+
+</$fill>
+</$transclude>

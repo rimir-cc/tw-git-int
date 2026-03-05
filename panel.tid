@@ -1,0 +1,243 @@
+created: 20260305110616406
+list-after: $:/core/ui/EditTemplate/controls
+modified: 20260305110616406
+tags: $:/tags/EditTemplate
+title: $:/plugins/rimir/git-int/panel
+type: text/vnd.tiddlywiki
+
+\whitespace trim
+\procedure git-panel()
+<$let
+	originalTitle={{{ [{!!draft.of}] }}}
+	draftTitle=<<currentTiddler>>
+	panelState={{{ [[$:/state/rimir/git-int/]addsuffix<originalTitle>] }}}
+	tabState={{{ [[$:/state/rimir/git-int/tab/]addsuffix<originalTitle>] }}}
+	activeTab={{{ [<tabState>get[text]else[diff]] }}}
+	tempPrefix={{{ [[$:/temp/rimir/git-int/]addsuffix<originalTitle>addsuffix[/]] }}}
+	commitMsgState={{{ [[$:/temp/rimir/git-int/commit-msg/]addsuffix<originalTitle>] }}}
+	stashMsgState={{{ [[$:/temp/rimir/git-int/stash-msg/]addsuffix<originalTitle>] }}}
+>
+<$reveal type="match" state=<<panelState>> text="open" animate="yes" class="rgi-panel-wrapper">
+<div class="rgi-panel rr-panel">
+
+<!-- Tab bar -->
+<div class="rr-tabs">
+	<$button class={{{ [<activeTab>match[diff]then[rr-tab rr-tab-active]else[rr-tab]] }}} >
+		<$action-setfield $tiddler=<<tabState>> text="diff"/>
+		<$action-git op="diff" title=<<originalTitle>> draft=<<draftTitle>>/>
+		Diff
+	</$button>
+	<$button class={{{ [<activeTab>match[snapshot]then[rr-tab rr-tab-active]else[rr-tab]] }}} >
+		<$action-setfield $tiddler=<<tabState>> text="snapshot"/>
+		<$action-git op="log" title=<<originalTitle>>/>
+		Commit
+	</$button>
+	<$button class={{{ [<activeTab>match[stash]then[rr-tab rr-tab-active]else[rr-tab]] }}} >
+		<$action-setfield $tiddler=<<tabState>> text="stash"/>
+		<$action-git op="stash-list" title=<<originalTitle>>/>
+		Stash
+	</$button>
+</div>
+
+<!-- Diff tab -->
+<$reveal type="match" state=<<tabState>> text="diff" default="diff">
+<div class="rgi-tab-content">
+	<$let resultTiddler={{{ [<tempPrefix>addsuffix[diff]] }}}>
+	<$let resultStatus={{{ [<resultTiddler>get[text]jsonget[status]] }}}>
+	<%if [<resultStatus>match[loading]] %>
+		<div class="rr-status-loading">Loading diff...</div>
+	<%elseif [<resultStatus>match[error]] %>
+		<div class="rr-status-error"><$text text={{{ [<resultTiddler>get[text]jsonget[error]] }}}/></div>
+	<%elseif [<resultStatus>match[ok]] %>
+		<$let
+			diffHash={{{ [<resultTiddler>get[text]jsonget[hash]] }}}
+			diffIndex={{{ [<resultTiddler>get[text]jsonget[index]] }}}
+		>
+		<div class="rgi-diff-label">
+			<$text text={{{ [<resultTiddler>get[text]jsonget[diffLabel]] }}}/>
+			<$let storedModified={{{ [<resultTiddler>get[text]jsonget[draftModified]] }}}>
+			<$list filter="[<draftTitle>get[modified]!match<storedModified>]" variable="x">
+				<span class="rgi-stale-warning"> (outdated)</span>
+				<$button class="rgi-recalc-btn tc-btn-invisible">
+					<$action-git op="diff" title=<<originalTitle>> draft=<<draftTitle>> hash=<<diffHash>> index=<<diffIndex>>/>
+					Recalculate
+				</$button>
+			</$list>
+			</$let>
+		</div>
+		<%if [<resultTiddler>get[text]jsonget[hasDiff]match[true]] %>
+			<div class="rgi-field-diffs">
+			<$list filter="[<resultTiddler>get[text]jsonindexes[fieldChanges]]" variable="idx">
+				<$let
+					changeType={{{ [<resultTiddler>get[text]jsonget[fieldChanges],<idx>,[type]] }}}
+					fieldName={{{ [<resultTiddler>get[text]jsonget[fieldChanges],<idx>,[field]] }}}
+					oldVal={{{ [<resultTiddler>get[text]jsonget[fieldChanges],<idx>,[oldVal]] }}}
+					newVal={{{ [<resultTiddler>get[text]jsonget[fieldChanges],<idx>,[newVal]] }}}
+				>
+				<div class={{{ [[rgi-field-diff-row rgi-field-]addsuffix<changeType>] }}}>
+					<span class="rgi-field-label"><$list filter="[<changeType>match[added]]" variable="x"><span class="rr-badge-circle rr-badge-added">+</span></$list><$list filter="[<changeType>match[removed]]" variable="x"><span class="rr-badge-circle rr-badge-removed">&minus;</span></$list><$text text=<<fieldName>>/>:</span>
+					<span class="rgi-field-diff-content"><$diff-text source=<<oldVal>> dest=<<newVal>>/></span>
+					<$list filter="[<changeType>match[added]]" variable="x"><$button class="rgi-field-reset tc-btn-invisible" tooltip="Remove this field"><$action-deletefield $tiddler=<<draftTitle>> $field=<<fieldName>>/><$action-git op="diff" title=<<originalTitle>> draft=<<draftTitle>> hash=<<diffHash>> index=<<diffIndex>>/><svg class="rgi-undo-icon" width="12" height="12" viewBox="0 0 24 24"><path d="M9 10h8c2.2 0 4 1.8 4 4s-1.8 4-4 4h-2" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M13 6L9 10l4 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></$button></$list>
+					<$list filter="[<changeType>!match[added]]" variable="x"><$button class="rgi-field-reset tc-btn-invisible" tooltip="Revert to committed value"><$action-setfield $tiddler=<<draftTitle>> $field=<<fieldName>> $value=<<oldVal>>/><$action-git op="diff" title=<<originalTitle>> draft=<<draftTitle>> hash=<<diffHash>> index=<<diffIndex>>/><svg class="rgi-undo-icon" width="12" height="12" viewBox="0 0 24 24"><path d="M9 10h8c2.2 0 4 1.8 4 4s-1.8 4-4 4h-2" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M13 6L9 10l4 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></$button></$list>
+				</div>
+				</$let>
+			</$list>
+			</div>
+		<%else%>
+			<div class="rr-status-info">No uncommitted changes.</div>
+		<%endif%>
+		</$let>
+	<%else%>
+		<div class="rr-status-info">Click Diff tab to check for changes.</div>
+	<%endif%>
+	</$let>
+	</$let>
+</div>
+</$reveal>
+
+<!-- Commit tab -->
+<$reveal type="match" state=<<tabState>> text="snapshot">
+<div class="rgi-tab-content">
+	<div class="rr-input-row">
+		<$edit-text tiddler=<<commitMsgState>> tag="input" placeholder={{{ [[Snapshot: ]addsuffix<originalTitle>] }}} class="rr-input" default=""/>
+		<$button class="rgi-snapshot-btn tc-btn-big-green">
+			<$let msg={{{ [<commitMsgState>get[text]] ~[[Snapshot: ]addsuffix<originalTitle>] }}}>
+			<$action-git op="snapshot" title=<<originalTitle>> message=<<msg>> draft=<<draftTitle>>/>
+			<$action-setfield $tiddler=<<commitMsgState>> text=""/>
+			</$let>
+			Commit
+		</$button>
+	</div>
+	<$let resultTiddler={{{ [<tempPrefix>addsuffix[snapshot]] }}}>
+	<$let resultStatus={{{ [<resultTiddler>get[text]jsonget[status]] }}}>
+	<%if [<resultStatus>match[loading]] %>
+		<div class="rr-status-loading">Committing...</div>
+	<%elseif [<resultStatus>match[error]] %>
+		<div class="rr-status-error"><$text text={{{ [<resultTiddler>get[text]jsonget[error]] }}}/></div>
+	<%elseif [<resultStatus>match[ok]] %>
+		<div class="rr-status-success"><$text text={{{ [<resultTiddler>get[text]jsonget[output]] }}}/></div>
+	<%endif%>
+	</$let>
+	</$let>
+	<!-- History -->
+	<$let resultTiddler={{{ [<tempPrefix>addsuffix[log]] }}}>
+	<$let resultStatus={{{ [<resultTiddler>get[text]jsonget[status]] }}}>
+	<%if [<resultStatus>match[loading]] %>
+		<div class="rr-status-loading">Loading history...</div>
+	<%elseif [<resultStatus>match[error]] %>
+		<div class="rr-status-error"><$text text={{{ [<resultTiddler>get[text]jsonget[error]] }}}/></div>
+	<%elseif [<resultStatus>match[ok]] %>
+		<$let entryCount={{{ [<resultTiddler>get[text]jsonindexes[entries]count[]] }}}>
+		<%if [<entryCount>compare:number:eq[0]] %>
+			<div class="rr-status-info">No commits found for this file.</div>
+		<%else%>
+			<table class="rr-table">
+			<tr><th>Hash</th><th>Date</th><th>Message</th><th></th></tr>
+			<$list filter="[<resultTiddler>get[text]jsonindexes[entries]]" variable="idx">
+				<tr>
+					<td class="rgi-hash"><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[hash]] }}}/></td>
+					<td class="rgi-date"><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[date]] }}}/></td>
+					<td><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[message]] }}}/></td>
+					<td>
+						<$let commitHash={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[hash]] }}}>
+						<$button class="rr-link-btn tc-btn-invisible">
+							<$action-git op="diff" title=<<originalTitle>> hash=<<commitHash>> draft=<<draftTitle>>/>
+							<$action-setfield $tiddler=<<tabState>> text="diff"/>
+							Diff
+						</$button>
+						<$button class="rr-link-btn tc-btn-invisible">
+							<$action-git op="show" title=<<originalTitle>> hash=<<commitHash>> draft=<<draftTitle>>/>
+							Restore
+						</$button>
+						</$let>
+					</td>
+				</tr>
+			</$list>
+			</table>
+		<%endif%>
+		</$let>
+	<%endif%>
+	</$let>
+	</$let>
+</div>
+</$reveal>
+
+<!-- Stash tab -->
+<$reveal type="match" state=<<tabState>> text="stash">
+<div class="rgi-tab-content">
+	<div class="rr-input-row">
+		<$edit-text tiddler=<<stashMsgState>> tag="input" placeholder={{{ [[Stash: ]addsuffix<originalTitle>] }}} class="rr-input" default=""/>
+		<$button class="rgi-stash-btn tc-btn-big-green">
+			<$let msg={{{ [<stashMsgState>get[text]] ~[[Stash: ]addsuffix<originalTitle>] }}}>
+			<$action-git op="stash-push" title=<<originalTitle>> message=<<msg>> draft=<<draftTitle>>/>
+			<$action-setfield $tiddler=<<stashMsgState>> text=""/>
+			</$let>
+			Stash
+		</$button>
+	</div>
+	<$let pushResult={{{ [<tempPrefix>addsuffix[stash-push]] }}}>
+	<$let pushStatus={{{ [<pushResult>get[text]jsonget[status]] }}}>
+	<%if [<pushStatus>match[loading]] %>
+		<div class="rr-status-loading">Stashing...</div>
+	<%elseif [<pushStatus>match[error]] %>
+		<div class="rr-status-error"><$text text={{{ [<pushResult>get[text]jsonget[error]] }}}/></div>
+	<%elseif [<pushStatus>match[ok]] %>
+		<div class="rr-status-success"><$text text={{{ [<pushResult>get[text]jsonget[output]] }}}/></div>
+	<%endif%>
+	</$let>
+	</$let>
+	<$let resultTiddler={{{ [<tempPrefix>addsuffix[stash-list]] }}}>
+	<$let resultStatus={{{ [<resultTiddler>get[text]jsonget[status]] }}}>
+	<%if [<resultStatus>match[loading]] %>
+		<div class="rr-status-loading">Loading stash list...</div>
+	<%elseif [<resultStatus>match[error]] %>
+		<div class="rr-status-error"><$text text={{{ [<resultTiddler>get[text]jsonget[error]] }}}/></div>
+	<%elseif [<resultStatus>match[ok]] %>
+		<$let entryCount={{{ [<resultTiddler>get[text]jsonindexes[entries]count[]] }}}>
+		<%if [<entryCount>compare:number:eq[0]] %>
+			<div class="rr-status-info">No stashes.</div>
+		<%else%>
+			<table class="rr-table">
+			<tr><th>Ref</th><th>Date</th><th>Message</th><th></th></tr>
+			<$list filter="[<resultTiddler>get[text]jsonindexes[entries]]" variable="idx">
+				<tr>
+					<td class="rgi-hash"><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[ref]] }}}/></td>
+					<td class="rgi-date"><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[date]] }}}/></td>
+					<td><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[message]] }}}/></td>
+					<td class="rgi-stash-actions">
+						<$let stashIndex={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[index]] }}}>
+						<$button class="rr-link-btn tc-btn-invisible">
+							<$action-git op="diff" title=<<originalTitle>> index=<<stashIndex>> draft=<<draftTitle>>/>
+							<$action-setfield $tiddler=<<tabState>> text="diff"/>
+							Diff
+						</$button>
+						<$button class="rr-link-btn tc-btn-invisible">
+							<$action-git op="stash-show" title=<<originalTitle>> index=<<stashIndex>> draft=<<draftTitle>>/>
+							Apply
+						</$button>
+						<$button class="rr-link-btn rr-link-btn-danger tc-btn-invisible">
+							<$action-confirm $message="Drop this stash entry? This cannot be undone.">
+							<$action-git op="stash-drop" title=<<originalTitle>> index=<<stashIndex>>/>
+							</$action-confirm>
+							Drop
+						</$button>
+						</$let>
+					</td>
+				</tr>
+			</$list>
+			</table>
+		<%endif%>
+		</$let>
+	<%else%>
+		<div class="rr-status-info">Click Stash tab to load stash list.</div>
+	<%endif%>
+	</$let>
+	</$let>
+</div>
+</$reveal>
+
+</div>
+</$reveal>
+</$let>
+\end
+<<git-panel>>

@@ -1,0 +1,125 @@
+created: 20260305110616407
+modified: 20260305110616407
+tags: $:/tags/Stylesheet
+title: $:/plugins/rimir/git-int/styles
+type: text/vnd.tiddlywiki
+
+.rgi-panel-wrapper {
+	display: block;
+}
+
+.rgi-panel {
+	margin: 4px 0 8px 0;
+}
+
+/* Tab content */
+.rgi-tab-content {
+	padding: 8px 12px;
+	max-height: 600px;
+	overflow-y: auto;
+}
+
+/* Field diffs */
+.rgi-field-diffs {
+	margin-bottom: 8px;
+	border: 1px solid <<colour code-border>>;
+	border-radius: 3px;
+	padding: 4px 8px;
+}
+
+.rgi-field-diff-row {
+	display: flex;
+	align-items: baseline;
+	padding: 2px 0;
+	border-bottom: 1px solid <<colour tiddler-border>>;
+}
+
+.rgi-field-diff-row:last-child {
+	border-bottom: none;
+}
+
+.rgi-field-label {
+	font-weight: bold;
+	font-size: 0.85em;
+	white-space: nowrap;
+	margin-right: 8px;
+	min-width: 80px;
+	color: <<colour muted-foreground>>;
+}
+
+.rgi-field-diff-content {
+	flex: 1;
+	font-size: 0.85em;
+}
+
+.rgi-field-reset {
+	font-size: 0.85em;
+	color: <<colour muted-foreground>>;
+	margin-left: 6px;
+	padding: 0 2px;
+	flex-shrink: 0;
+}
+
+.rgi-field-reset:hover {
+	color: <<colour primary>>;
+}
+
+/* Text diff display */
+.rgi-diff-view {
+	max-height: 500px;
+	overflow-y: auto;
+	border: 1px solid <<colour code-border>>;
+	border-radius: 3px;
+	margin: 4px 0;
+}
+
+.rgi-hash {
+	font-family: monospace;
+	font-size: 0.95em;
+}
+
+.rgi-date {
+	white-space: nowrap;
+	color: <<colour muted-foreground>>;
+}
+
+.rgi-stash-actions {
+	white-space: nowrap;
+}
+
+.rgi-stash-btn {
+	white-space: nowrap;
+}
+
+.rgi-snapshot-btn {
+	white-space: nowrap;
+}
+
+.rgi-diff-label {
+	font-weight: bold;
+	font-size: 0.9em;
+	color: <<colour muted-foreground>>;
+	margin-bottom: 6px;
+}
+
+.rgi-stale-warning {
+	color: <<colour alert-highlight>>;
+	font-style: italic;
+	margin-left: 8px;
+}
+
+.rgi-recalc-btn {
+	color: white;
+	background: <<colour primary>>;
+	font-size: 0.9em;
+	font-weight: bold;
+	margin-left: 10px;
+	padding: 2px 10px;
+	border-radius: 3px;
+	border: none;
+	cursor: pointer;
+}
+
+.rgi-recalc-btn:hover {
+	opacity: 0.85;
+}

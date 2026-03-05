@@ -1,0 +1,48 @@
+created: 20260305110616404
+modified: 20260305110616404
+rdt.hub-category: editor-vcs
+rdt.hub-category-name: Editor & Version Control
+rdt.hub-order: 2
+rdt.order: 1
+rdt.plugin-key: git-int
+rdt.plugin-name: git integration
+rdt.plugin-subtitle: Git version control for individual tiddlers from the editor
+rdt.section: Overview
+title: $:/plugins/rimir/git-int/doc/overview
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! What it does
+
+Version control individual tiddlers directly from the TiddlyWiki editor. Click the git icon in the editor toolbar to open a panel with three tabs: Diff, Commit, and Stash.
+
+!! Features
+
+* ''Diff tab'' — shows changes vs git reference, per-field inline diffs, revert buttons per field, auto-loads on panel open
+* ''Commit tab'' — optional message (default "Snapshot: <title>"), history with diff/restore buttons
+* ''Stash tab'' — save/apply/drop stash entries, compare stash to draft
+* ''Draft-aware'' — browser sends current draft fields to server (server's `$tw.wiki` may lag behind)
+* ''Uniform field handling'' — all fields compared equally (text is not special)
+* ''Non-destructive'' — diff/restore/revert only modify browser draft, never git directly
+* ''Per-tiddler state'' — each tiddler has independent git panel state
+
+!! Prerequisites
+
+* Git repository with tiddler files tracked
+* TiddlyWiki running in Node.js server mode
+
+!! Quick start
+
+# Ensure your wiki directory is a git repo with tiddler files committed
+# Open any tiddler for editing
+# Click the git icon in the editor toolbar
+# The Diff tab auto-loads showing changes since last commit
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/callout" type="warning">
+<$fill $name="body">Commit, stash, and drop operations modify git history permanently. Diff, restore, apply, and revert only modify the browser draft.</$fill>
+</$transclude>
+
+</$fill>
+</$transclude>

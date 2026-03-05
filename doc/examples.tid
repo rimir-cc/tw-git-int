@@ -1,0 +1,57 @@
+created: 20260305110616404
+modified: 20260305110616404
+rdt.order: 4
+rdt.plugin-key: git-int
+rdt.plugin-name: git integration
+rdt.plugin-subtitle: Git version control for individual tiddlers from the editor
+rdt.section: Examples
+title: $:/plugins/rimir/git-int/doc/examples
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! Full diff workflow
+
+# Open a tiddler for editing
+# Click the git icon in the editor toolbar to open the panel
+# The Diff tab loads automatically, showing field-by-field changes vs HEAD
+# Changed fields show old and new values; added fields show only new; removed fields show only old
+# Click the undo icon on any field to revert just that field
+
+!! Commit with message
+
+# Make edits to a tiddler and open the git panel
+# Switch to the Commit tab
+# Enter a commit message in the text field
+# Click "Commit" — the plugin writes draft fields to disk, runs `git add` + `git commit`
+# The log below refreshes automatically to show the new commit
+
+!! View commit history
+
+# Open the git panel on any tiddler
+# Switch to the Commit tab — the log shows recent commits (up to 20)
+# Click "Show" on any entry to view the tiddler's state at that commit
+# Click "Diff" to compare the current draft against that specific commit
+# Click "Restore" to replace all draft fields with that commit's version
+
+!! Stash and restore
+
+# Open the git panel and switch to the Stash tab
+# Enter an optional message and click "Stash" — saves current draft to git stash
+# The stash list below shows all stashed versions
+# Click "Show" to preview, "Diff" to compare, or "Restore" to apply
+# Click "Drop" to remove a stash entry
+
+!! Per-field revert
+
+When viewing a diff, each changed field has an undo button. Clicking it:
+
+* For ''changed'' fields: resets the draft field to the old value
+* For ''added'' fields: removes the field from the draft
+* For ''removed'' fields: restores the field to the draft
+
+After reverting, the diff re-runs to reflect the updated state.
+
+</$fill>
+</$transclude>

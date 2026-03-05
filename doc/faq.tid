@@ -1,0 +1,39 @@
+created: 20260305110616404
+modified: 20260305110616404
+rdt.order: 5
+rdt.plugin-key: git-int
+rdt.plugin-name: git integration
+rdt.plugin-subtitle: Git version control for individual tiddlers from the editor
+rdt.section: FAQ
+title: $:/plugins/rimir/git-int/doc/faq
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! Q: Why does diff use POST instead of GET?
+
+The browser may have unsaved draft edits that haven't reached the server yet (syncer polling delay). POST lets the browser send current draft field values so the diff is always accurate against what you're actually editing.
+
+!! Q: What if nothing has been committed yet?
+
+The diff operation will return an error because `git show HEAD:<path>` fails when there's no commit history for that file. Commit at least once before using diff.
+
+!! Q: Can I undo a commit?
+
+Not from the plugin UI. Use `git revert` or `git reset` from the command line. The plugin is intentionally limited to forward-only operations (commit, stash, restore) to avoid destructive actions from the browser.
+
+!! Q: Why per-tiddler operations instead of bulk?
+
+Each tiddler is a separate `.tid` file in the git repo. Per-tiddler operations map cleanly to git's file-level semantics and keep the UI focused on the tiddler you're currently editing.
+
+!! Q: What about binary tiddlers?
+
+Binary files (images, PDFs) don't have `.tid` format with field headers. The plugin resolves paths via `$tw.boot.files` which tracks all tiddler-to-file mappings, but diffing only works meaningfully for text-based `.tid` files.
+
+!! Q: Why two separate route files?
+
+Clean separation by HTTP method. `route.js` handles GET (read-only: log, show, stash-list, stash-show, stash-drop) and `route-post.js` handles POST (draft-aware: diff, snapshot, stash-push). This makes the security model clear — POST routes receive and write data, GET routes only read.
+
+</$fill>
+</$transclude>

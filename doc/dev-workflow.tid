@@ -1,0 +1,60 @@
+created: 20260305110616404
+modified: 20260305110616404
+rdt.order: 3
+rdt.plugin-key: git-int
+rdt.plugin-name: git integration
+rdt.plugin-subtitle: Git version control for individual tiddlers from the editor
+rdt.section: Dev Workflow
+title: $:/plugins/rimir/git-int/doc/dev-workflow
+type: text/vnd.tiddlywiki
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/page">
+<$fill $name="body">
+
+!! Plugin files
+
+|!File |!Role |
+|`plugin.info` |Plugin metadata |
+|`git-utils.js` |Shared library (module-type: library) |
+|`route.js` |GET route (module-type: route) |
+|`route-post.js` |POST route (module-type: route) |
+|`action-git.js` |Action widget (module-type: widget) |
+|`toolbar-button.tid` |Editor toolbar button (tagged) |
+|`panel.tid` |Edit template panel (tagged) |
+|`icon.tid` |Toolbar icon (tagged) |
+|`styles.tid` |CSS stylesheet |
+
+!! Restart rules
+
+All changes require server restart (JS modules + plugin shadow tiddlers).
+
+<$transclude $tiddler="$:/plugins/rimir/doc-template/templates/callout" type="tip">
+<$fill $name="body">After restarting, do a hard refresh (Ctrl+F5) in the browser to clear cached JS.</$fill>
+</$transclude>
+
+!! Design decisions
+
+* POST for draft fields — server wiki may lag behind browser due to syncer polling
+* Dedicated routes (not runner plugin) — needs response data handling
+* Two route files — clean separation by HTTP method
+* Uniform field handling — text field not treated specially
+* Full field restore — replaces all fields, removes absent ones
+* Context-preserving revert — echoes hash/index back to browser
+* Auto-load on panel open — runs `op="diff"` when panel opens
+
+!! API reference
+
+|!Method |!Endpoint |!Operations |
+|GET |`/api/git` |log, show, stash-list, stash-show, stash-drop |
+|POST |`/api/git` |diff, snapshot, stash-push |
+
+All responses include `op` and `status` fields.
+
+!! Debugging
+
+* Server logs: `$tw.utils.Logger("git-int")`
+* Browser: check `$:/temp/rimir/git-int/<title>/<op>` tiddlers
+* Network: DevTools Network tab for request/response inspection
+
+</$fill>
+</$transclude>
