@@ -1,0 +1,27 @@
+# git integration
+
+> Git version control integration for the TiddlyWiki editor
+
+Git version control for individual tiddlers from within the TiddlyWiki editor. Commit, diff, restore, and stash changes without leaving edit mode.
+
+## Key features
+
+* **Inline diff** -- view current changes vs. last commit side by side
+* **Commit** -- commit individual tiddlers with a commit message
+* **Stash** -- stash/unstash and inspect stashed changes
+* **Restore** -- restore tiddler content to any previous version
+* **Draft-aware** -- works with unsaved edits (browser sends draft fields to server)
+* **Toolbar button** -- accessible from the edit toolbar
+
+## Prerequisites
+
+* Git installed and available on the server's PATH
+* Tiddlers directory must be a git repository
+
+## Quick start
+
+Initialize git in your tiddlers directory. Open any tiddler in edit mode and click the git icon in the toolbar to access diff, commit, and stash operations.
+
+## License
+
+MIT -- see [LICENSE.md](LICENSE.md)
