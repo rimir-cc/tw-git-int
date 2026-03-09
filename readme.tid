@@ -14,13 +14,14 @@ Git version control for individual tiddlers from within the TiddlyWiki editor. C
 * ''Stash'' — stash/unstash and inspect stashed changes
 * ''Restore'' — restore tiddler content to any previous version
 * ''Draft-aware'' — works with unsaved edits (browser sends draft fields to server)
+* ''Multi-repo'' — automatically detects which git repo each tiddler belongs to (supports nested repos)
 * ''Toolbar button'' — accessible from the edit toolbar
 
 !! Prerequisites
 
 * Git installed and available on the server's PATH
-* Tiddlers directory must be a git repository
+* Tiddlers directory (or subdirectories) must be inside a git repository
 
 !! Quick start
 
-Initialize git in your tiddlers directory. Open any tiddler in edit mode and click the git icon in the toolbar to access diff, commit, and stash operations.
+Initialize git in your tiddlers directory (or use separate repos for subdirectories like `tiddlers/work/` and `tiddlers/private/`). Open any tiddler in edit mode and click the git icon in the toolbar to access diff, commit, and stash operations.

@@ -31,6 +31,10 @@ Each tiddler is a separate `.tid` file in the git repo. Per-tiddler operations m
 
 Binary files (images, PDFs) don't have `.tid` format with field headers. The plugin resolves paths via `$tw.boot.files` which tracks all tiddler-to-file mappings, but diffing only works meaningfully for text-based `.tid` files.
 
+!! Q: Can I use different git repos for different tiddler directories?
+
+Yes. The plugin automatically detects which git repo each tiddler file belongs to by running `git rev-parse --show-toplevel` from the file's directory. For example, your wiki root can be one repo while `tiddlers/work/` and `tiddlers/private/` are separate repos. All operations (log, diff, commit, stash) run against the correct repo. Stash lists are also scoped per repo.
+
 !! Q: Why two separate route files?
 
 Clean separation by HTTP method. `route.js` handles GET (read-only: log, show, stash-list, stash-show, stash-drop) and `route-post.js` handles POST (draft-aware: diff, snapshot, stash-push). This makes the security model clear — POST routes receive and write data, GET routes only read.

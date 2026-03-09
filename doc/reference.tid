@@ -15,7 +15,7 @@ type: text/vnd.tiddlywiki
 
 |!Parameter |!Used by |!Format |!Description |
 |`op` |all |`log` `show` `stash-list` `stash-show` `stash-drop` |Operation name |
-|`title` |all except stash-list |tiddler title |Target tiddler |
+|`title` |all |tiddler title |Target tiddler (stash-list uses it to find the correct repo) |
 |`count` |log |integer (default 20) |Max log entries |
 |`hash` |show |`/^[a-f0-9]{4,40}$/` |Commit hash |
 |`index` |stash-show, stash-drop |`/^\d+$/` |Stash index |
@@ -63,7 +63,7 @@ All responses include `op` and `status` (`"ok"` or `"error"`).
 |`$:/state/rimir/git-int/<title>` |Panel open/closed |
 |`$:/state/rimir/git-int/tab/<title>` |Active tab name |
 |`$:/temp/rimir/git-int/<title>/<op>` |Operation response (JSON) |
-|`$:/temp/rimir/git-int/_global/stash-list` |Global stash list response |
+|`$:/temp/rimir/git-int/<title>/stash-list` |Stash list response (scoped to tiddler's repo) |
 |`$:/temp/rimir/git-int/commit-msg/<title>` |Commit message input |
 |`$:/temp/rimir/git-int/stash-msg/<title>` |Stash message input |
 

@@ -21,9 +21,14 @@ exports.handler = function(request, response, state) {
 	var op = state.queryParameters.op;
 	var title = state.queryParameters.title;
 
-	// stash-list doesn't need a title
+	// stash-list: use title to find the correct repo, fall back to wiki root
 	if(op === "stash-list") {
-		handleStashList(response, $tw.boot.wikiPath);
+		var stashCwd = $tw.boot.wikiPath;
+		if(title) {
+			var stashPaths = utils.resolveTiddlerPath(title);
+			if(stashPaths) stashCwd = stashPaths.cwd;
+		}
+		handleStashList(response, stashCwd);
 		return;
 	}
 

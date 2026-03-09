@@ -17,12 +17,20 @@ type: text/vnd.tiddlywiki
 * ''Action widget'' — `<$action-git>` XHR bridge between UI and server
 * ''Server routes'' — `route.js` (GET), `route-post.js` (POST), `git-utils.js` (shared)
 
+!! Multi-repo support
+
+The plugin automatically discovers which git repository each tiddler belongs to. When a tiddler path is resolved, `git rev-parse --show-toplevel` runs from the file's directory to find the actual repo root. This means:
+
+* The wiki root can be one repo, while subdirectories (e.g. `tiddlers/work/`, `tiddlers/private/`) can be separate repos
+* All git operations (log, diff, commit, stash) run against the correct repo for each tiddler
+* Git root lookups are cached per directory for the lifetime of the server process
+
 !! Components
 
 |!Component |!Layer |!Role |
 |`route.js` |Server |GET ops: log, show, stash-list, stash-show, stash-drop |
 |`route-post.js` |Server |POST ops: diff, snapshot, stash-push |
-|`git-utils.js` |Server |Shared: `resolveTiddlerPath`, `parseTidFields`, `parseTidBody`, `execGit`, `sendJson` |
+|`git-utils.js` |Server |Shared: `resolveTiddlerPath`, `findGitRoot`, `parseTidFields`, `parseTidBody`, `execGit`, `sendJson` |
 |`action-git.js` |Browser |`<$action-git>` widget — XHR bridge, writes to `$:/temp/` |
 |`panel.tid` |Browser |EditTemplate UI — 3 tabs (Diff/Commit/Stash) |
 |`toolbar-button.tid` |Browser |Editor toolbar button |
@@ -43,7 +51,7 @@ All fields compared uniformly. Server returns `fieldChanges` array with per-fiel
 
 !! Security
 
-* No arbitrary paths — validates against `$tw.boot.files`
+* No arbitrary paths — validates against `$tw.boot.files` and verifies the file is inside a git repo
 * Input validation — hash `/^[a-f0-9]{4,40}$/`, index `/^\d+$/`
 * `execFile` with array args — no shell injection
 * CSRF header required (`X-Requested-With: TiddlyWiki`)

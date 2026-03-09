@@ -218,8 +218,10 @@ ActionGit.prototype.handleResponse = function(xhr, op, title, tempTitle) {
 
 ActionGit.prototype.refreshStashList = function(title) {
 	var self = this;
+	var url = "/api/git?op=stash-list";
+	if(title) url += "&title=" + encodeURIComponent(title);
 	var xhr = new XMLHttpRequest();
-	xhr.open("GET", "/api/git?op=stash-list", true);
+	xhr.open("GET", url, true);
 	xhr.setRequestHeader("X-Requested-With", "TiddlyWiki");
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState === 4 && xhr.status === 200) {

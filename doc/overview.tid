@@ -27,15 +27,16 @@ Version control individual tiddlers directly from the TiddlyWiki editor. Click t
 * ''Uniform field handling'' — all fields compared equally (text is not special)
 * ''Non-destructive'' — diff/restore/revert only modify browser draft, never git directly
 * ''Per-tiddler state'' — each tiddler has independent git panel state
+* ''Multi-repo'' — automatically detects the git repo for each tiddler file (supports nested repos, e.g. separate repos for `tiddlers/work/` and `tiddlers/private/`)
 
 !! Prerequisites
 
-* Git repository with tiddler files tracked
+* One or more git repositories covering tiddler files
 * TiddlyWiki running in Node.js server mode
 
 !! Quick start
 
-# Ensure your wiki directory is a git repo with tiddler files committed
+# Ensure your tiddler files are tracked in a git repo (the wiki root, or separate repos for subdirectories)
 # Open any tiddler for editing
 # Click the git icon in the editor toolbar
 # The Diff tab auto-loads showing changes since last commit

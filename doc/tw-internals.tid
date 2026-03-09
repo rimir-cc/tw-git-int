@@ -13,7 +13,7 @@ type: text/vnd.tiddlywiki
 
 !! $tw.boot.files path resolution
 
-`$tw.boot.files[title]` maps tiddler titles to filesystem paths. The `resolveTiddlerPath` utility in `git-utils.js` uses this to find the `.tid` file for any tiddler. Returns `null` if the tiddler has no filesystem backing (e.g., shadow tiddlers).
+`$tw.boot.files[title]` maps tiddler titles to filesystem paths. The `resolveTiddlerPath` utility in `git-utils.js` uses this to find the `.tid` file for any tiddler, then runs `git rev-parse --show-toplevel` from the file's directory to discover the actual git repository root. Returns `null` if the tiddler has no filesystem backing (e.g., shadow tiddlers) or is not inside a git repository. Git root lookups are cached per directory.
 
 !! execFile vs exec
 
