@@ -1,0 +1,10 @@
+{
+    "description": "Test edition for git-int",
+    "plugins": [
+        "tiddlywiki/jasmine"
+    ],
+    "themes": [
+        "tiddlywiki/vanilla",
+        "tiddlywiki/snowwhite"
+    ]
+}

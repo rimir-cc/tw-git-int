@@ -6,6 +6,7 @@ type: text/vnd.tiddlywiki
 ! Changelog
 
 |!Version |!Date |!Changes |
+|v0.1.3 |2026-03-15 |Add regression tests and CI test gate |
 |v0.1.2 |2026-03-09 |Multi-repo support: auto-detect git repo per tiddler file (nested repos). Fix .tid parsing: normalize line endings, return empty body when no separator found (fixes field headers leaking into text field on restore/diff) |
 |v0.1.1 |2026-03-06 |Standardize plugin tabs: add documentation/changelog/license to list, replace license.tid with LICENSE.md.meta sidecar |
 |v0.1.0 |2026 |Initial release |
