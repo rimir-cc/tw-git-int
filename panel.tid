@@ -77,8 +77,8 @@ type: text/vnd.tiddlywiki
 				<div class={{{ [[rgi-field-diff-row rgi-field-]addsuffix<changeType>] }}}>
 					<span class="rgi-field-label"><$list filter="[<changeType>match[added]]" variable="x"><span class="rr-badge-circle rr-badge-added">+</span></$list><$list filter="[<changeType>match[removed]]" variable="x"><span class="rr-badge-circle rr-badge-removed">&minus;</span></$list><$text text=<<fieldName>>/>:</span>
 					<span class="rgi-field-diff-content"><$diff-text source=<<oldVal>> dest=<<newVal>>/></span>
-					<$list filter="[<changeType>match[added]]" variable="x"><$button class="rgi-field-reset tc-btn-invisible" tooltip="Remove this field"><$action-deletefield $tiddler=<<draftTitle>> $field=<<fieldName>>/><$action-git op="diff" title=<<originalTitle>> draft=<<draftTitle>> hash=<<diffHash>> index=<<diffIndex>>/><svg class="rgi-undo-icon" width="12" height="12" viewBox="0 0 24 24"><path d="M9 10h8c2.2 0 4 1.8 4 4s-1.8 4-4 4h-2" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M13 6L9 10l4 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></$button></$list>
-					<$list filter="[<changeType>!match[added]]" variable="x"><$button class="rgi-field-reset tc-btn-invisible" tooltip="Revert to committed value"><$action-setfield $tiddler=<<draftTitle>> $field=<<fieldName>> $value=<<oldVal>>/><$action-git op="diff" title=<<originalTitle>> draft=<<draftTitle>> hash=<<diffHash>> index=<<diffIndex>>/><svg class="rgi-undo-icon" width="12" height="12" viewBox="0 0 24 24"><path d="M9 10h8c2.2 0 4 1.8 4 4s-1.8 4-4 4h-2" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M13 6L9 10l4 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></$button></$list>
+					<$list filter="[<changeType>match[added]]" variable="x"><$button class="rgi-field-reset tc-btn-invisible" tooltip="Remove this field"><$action-deletefield $tiddler=<<draftTitle>> $field=<<fieldName>>/><$action-git op="diff" title=<<originalTitle>> draft=<<draftTitle>> hash=<<diffHash>> index=<<diffIndex>>/><$transclude $tiddler="$:/plugins/rimir/git-int/icon/undo"/></$button></$list>
+					<$list filter="[<changeType>!match[added]]" variable="x"><$button class="rgi-field-reset tc-btn-invisible" tooltip="Revert to committed value"><$action-setfield $tiddler=<<draftTitle>> $field=<<fieldName>> $value=<<oldVal>>/><$action-git op="diff" title=<<originalTitle>> draft=<<draftTitle>> hash=<<diffHash>> index=<<diffIndex>>/><$transclude $tiddler="$:/plugins/rimir/git-int/icon/undo"/></$button></$list>
 				</div>
 				</$let>
 			</$list>
@@ -135,7 +135,7 @@ type: text/vnd.tiddlywiki
 			<tr><th>Hash</th><th>Date</th><th>Message</th><th></th></tr>
 			<$list filter="[<resultTiddler>get[text]jsonindexes[entries]]" variable="idx">
 				<tr>
-					<td class="rgi-hash"><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[hash]] }}}/></td>
+					<td class="rr-mono rgi-hash"><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[hash]] }}}/></td>
 					<td class="rgi-date"><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[date]] }}}/></td>
 					<td><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[message]] }}}/></td>
 					<td>
@@ -201,7 +201,7 @@ type: text/vnd.tiddlywiki
 			<tr><th>Ref</th><th>Date</th><th>Message</th><th></th></tr>
 			<$list filter="[<resultTiddler>get[text]jsonindexes[entries]]" variable="idx">
 				<tr>
-					<td class="rgi-hash"><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[ref]] }}}/></td>
+					<td class="rr-mono rgi-hash"><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[ref]] }}}/></td>
 					<td class="rgi-date"><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[date]] }}}/></td>
 					<td><$text text={{{ [<resultTiddler>get[text]jsonget[entries],<idx>,[message]] }}}/></td>
 					<td class="rgi-stash-actions">

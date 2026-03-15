@@ -3,7 +3,7 @@
     "description": "Git version control integration for the TiddlyWiki editor",
     "name": "git integration",
     "author": "rimir",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "core-version": ">=5.3.0",
     "source": "https://github.com/rimir-cc/tw-git-int",
     "plugin-type": "plugin",

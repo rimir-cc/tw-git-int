@@ -73,8 +73,8 @@ type: text/vnd.tiddlywiki
 	margin: 4px 0;
 }
 
+/* Use rr-mono class in markup for font-family; this adds git-specific sizing */
 .rgi-hash {
-	font-family: monospace;
 	font-size: 0.95em;
 }
 
