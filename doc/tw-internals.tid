@@ -21,7 +21,7 @@ The plugin uses `child_process.execFile("git", args)` with an array of arguments
 
 !! Route module-type
 
-Both `route.js` and `route-post.js` use `module-type: route`. They export `method` (`"GET"` or `"POST"`), `path` (regex), and `handler`. POST routes also export `bodyFormat: "string"` to tell TW to read the request body as a string (parsed as JSON in the handler).
+Both `route.js` and `route-post.js` use `module-type: route`. They export `method` (`"GET"` or `"POST"`), `path` (regex), and `handler`. The POST handler parses the request body as JSON from `state.data`.
 
 !! Action widget XHR pattern
 

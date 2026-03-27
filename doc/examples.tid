@@ -31,7 +31,6 @@ type: text/vnd.tiddlywiki
 
 # Open the git panel on any tiddler
 # Switch to the Commit tab — the log shows recent commits (up to 20)
-# Click "Show" on any entry to view the tiddler's state at that commit
 # Click "Diff" to compare the current draft against that specific commit
 # Click "Restore" to replace all draft fields with that commit's version
 
@@ -40,7 +39,8 @@ type: text/vnd.tiddlywiki
 # Open the git panel and switch to the Stash tab
 # Enter an optional message and click "Stash" — saves current draft to git stash
 # The stash list below shows all stashed versions
-# Click "Show" to preview, "Diff" to compare, or "Restore" to apply
+# Click "Diff" to compare the stash against the current draft
+# Click "Apply" to replace all draft fields with the stash's version
 # Click "Drop" to remove a stash entry
 
 !! Per-field revert

@@ -6,6 +6,7 @@ type: text/vnd.tiddlywiki
 ! Changelog
 
 |!Version |!Date |!Changes |
+|v0.1.7 |2026-03-27 |Fix doc consistency: remove nonexistent "Show" button refs, fix stash button labels, correct bodyFormat claim, add draftModified to response docs, fix CSS class descriptions, fix icon.tid metadata, fix filesystem-watcher interaction reasoning |
 |v0.1.6 |2026-03-27 |Fix README.md: add multi-repo feature and update prerequisites to reflect nested repo support |
 |v0.1.5 |2026-03-15 |Extract undo SVG to icon tiddler, use rr-mono for hash display |
 |v0.1.4 |2026-03-15 |Add name field to plugin.info |

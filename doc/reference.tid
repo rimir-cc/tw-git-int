@@ -41,7 +41,7 @@ All responses include `op` and `status` (`"ok"` or `"error"`).
 |!Op |!Extra fields |
 |log |`entries: [{hash, date, message}]` |
 |show, stash-show |`content` (body text), `fields` (parsed header) |
-|diff |`fieldChanges: [{field, type, oldVal, newVal}]`, `hasDiff`, `diffLabel`, `hash`, `index` |
+|diff |`fieldChanges: [{field, type, oldVal, newVal}]`, `hasDiff`, `diffLabel`, `hash`, `index`, `draftModified` |
 |snapshot |`output` (git commit output) |
 |stash-list |`entries: [{index, ref, date, message}]` |
 |stash-push |`output` (git stash output) |
@@ -88,7 +88,7 @@ Plugin-specific classes (prefix `rgi-`):
 |`rgi-tab-content` |Tab content area (padding, max-height, scroll) |
 |`rgi-field-diffs` / `rgi-field-diff-row` / `rgi-field-label` / `rgi-field-diff-content` / `rgi-field-reset` |Field-level diff display |
 |`rgi-diff-view` / `rgi-diff-label` |Text diff area |
-|`rgi-hash` / `rgi-date` |Monospace hash, muted date |
+|`rgi-hash` / `rgi-date` |Hash font-size (monospace via `rr-mono` in markup), muted date |
 |`rgi-stale-warning` / `rgi-recalc-btn` |Outdated diff indicator |
 |`rgi-snapshot-btn` / `rgi-stash-btn` / `rgi-stash-actions` |Button whitespace control |
 

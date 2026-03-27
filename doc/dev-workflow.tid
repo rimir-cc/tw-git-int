@@ -21,7 +21,7 @@ type: text/vnd.tiddlywiki
 |`action-git.js` |Action widget (module-type: widget) |
 |`toolbar-button.tid` |Editor toolbar button (tagged) |
 |`panel.tid` |Edit template panel (tagged) |
-|`icon.tid` |Toolbar icon (tagged) |
+|`icon.tid` |SVG icon (image/svg+xml) |
 |`styles.tid` |CSS stylesheet |
 
 !! Restart rules

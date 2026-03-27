@@ -20,7 +20,7 @@ Version control individual tiddlers directly from the TiddlyWiki editor. Click t
 
 !! Features
 
-* ''Diff tab'' — shows changes vs git reference, per-field inline diffs, revert buttons per field, auto-loads on panel open
+* ''Diff tab'' — shows changes vs git reference, per-field inline diffs, revert buttons per field, auto-loads when clicking the toolbar button
 * ''Commit tab'' — optional message (default "Snapshot: <title>"), history with diff/restore buttons
 * ''Stash tab'' — save/apply/drop stash entries, compare stash to draft
 * ''Draft-aware'' — browser sends current draft fields to server (server's `$tw.wiki` may lag behind)
