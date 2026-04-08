@@ -93,3 +93,74 @@ exports.sendJson = function(response, statusCode, data) {
 	response.writeHead(statusCode, {"Content-Type": "application/json"});
 	response.end(JSON.stringify(data));
 };
+
+// Parse field order from an existing .tid file header
+exports.getFieldOrder = function(fileContent) {
+	var order = [];
+	var lines = fileContent.split(/\r?\n/);
+	for(var i = 0; i < lines.length; i++) {
+		if(lines[i] === "") break;
+		var match = lines[i].match(/^([^:]+):/);
+		if(match) {
+			order.push(match[1]);
+		}
+	}
+	return order;
+};
+
+// Reconstruct a .tid file preserving the original field order
+exports.buildTidContent = function(fields, originalContent) {
+	if(!fields) return null;
+	var text = fields.text || "";
+
+	var order = originalContent ? exports.getFieldOrder(originalContent) : [];
+
+	// Existing fields first (in original order), then new fields (sorted)
+	var written = {};
+	var lines = [];
+	for(var i = 0; i < order.length; i++) {
+		var name = order[i];
+		if(name !== "text" && name in fields) {
+			lines.push(name + ": " + fields[name]);
+			written[name] = true;
+		}
+	}
+	var newFields = [];
+	for(var name in fields) {
+		if(name !== "text" && !written[name]) {
+			newFields.push(name);
+		}
+	}
+	newFields.sort();
+	for(var j = 0; j < newFields.length; j++) {
+		lines.push(newFields[j] + ": " + fields[newFields[j]]);
+	}
+
+	return lines.join("\n") + "\n\n" + text;
+};
+
+// Compare two field sets, return array of changes
+var SKIP_FIELDS = {modified: true, bag: true, revision: true};
+
+exports.buildFieldChanges = function(oldFields, newFields) {
+	var changes = [];
+	var allKeys = {};
+	var k;
+	for(k in oldFields) allKeys[k] = true;
+	for(k in newFields) allKeys[k] = true;
+	var keys = Object.keys(allKeys).sort();
+	for(var i = 0; i < keys.length; i++) {
+		k = keys[i];
+		if(SKIP_FIELDS[k]) continue;
+		var oldVal = oldFields[k];
+		var newVal = newFields[k];
+		if(oldVal === undefined && newVal !== undefined) {
+			changes.push({field: k, type: "added", oldVal: "", newVal: newVal});
+		} else if(oldVal !== undefined && newVal === undefined) {
+			changes.push({field: k, type: "removed", oldVal: oldVal, newVal: ""});
+		} else if(oldVal !== newVal) {
+			changes.push({field: k, type: "changed", oldVal: oldVal, newVal: newVal});
+		}
+	}
+	return changes;
+};
